@@ -1,10 +1,10 @@
 package com.example.schemaEx.service.task;
 
-public class TaskEntityNotFoundExcption extends RuntimeException {
+public class TaskEntityNotFoundException extends RuntimeException {
 
     private long taskId;
 
-    public TaskEntityNotFoundExcption(long taskId) {
+    public TaskEntityNotFoundException(long taskId) {
         super("TaskEntity (id =" + taskId + ") is not found");
         this.taskId = taskId;
     }
