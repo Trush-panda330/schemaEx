@@ -16,7 +16,7 @@ paths:
       responses:
         '200':
           description: OK
-  /tasks/{taskId]: #{}で書くことで任意の値を設定できる
+  /tasks/{taskId}: #{}で書くことで任意の値を設定できる
     get:
       tags:
         - tasks
@@ -36,6 +36,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaskDTO"
+        '400':
+          description: "Not Found"
 #scheamas
 components:
   schemas:
