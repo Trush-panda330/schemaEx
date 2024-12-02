@@ -1,5 +1,6 @@
 package com.example.schemaEx.service.task;
 
+import com.example.schemaEx.repository.task.TaskRepository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -7,8 +8,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskService {
 
+    private final TaskRepository taskRepository;
+
     public TaskEntity find() {
-        return new TaskEntity(2,"from Service");
+         return taskRepository.select()
+                .map(record -> new TaskEntity(record.getId(), record.getTitle()))
+                .orElseThrow(() -> new IllegalStateException("todo"));
     }
 }
 
