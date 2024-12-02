@@ -16,11 +16,52 @@ paths:
       responses:
         '200':
           description: OK
-  /tasks/1:
+  /tasks:
+    post:
+      summary: "タスク作成"
+      description: "タスクを更新します"
+      operationId: "createTask"
+      tags:
+        - tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskForm"
+      responses:
+        201:
+          description: "Created"
+          headers:
+            location:
+              description: "作成されたリソースのURI"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskDTO"
+        400:
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+  /tasks/{taskId}: #{}で書くことで任意の値を設定できる
     get:
+      summary: "タスク取得"
+      description: "指定されたIDのタスクを１件取得します"
       tags:
         - tasks
       operationId: showTask
+      parameters:
+        - name: taskId #pathに書いた{}の中の名前と一致させる
+          in: path
+          required: true
+          description: "詳細を取得するタスクのID"
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -28,6 +69,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/TaskDTO"
+        '400':
+          description: "Not Found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceNotFoundError"
 #scheamas
 components:
   schemas:
@@ -44,5 +91,65 @@ components:
       required:
         - id
         - title
+    ResourceNotFoundError:
+      description: "指定したリソースが存在しない"
+      type: object
+      properties:
+        title:
+          type: string
+          description: "エラーのタイトル"
+          default: "Resource Not Found"
+        detail:
+          type: string
+          description: "エラーの詳細"
+      required:
+        - title
+        - detail
+    BadRequestError:
+      description: "不正なリクエスト"
+      type: object
+      properties:
+        title:
+          type: string
+          description: "エラーのタイトル"
+          default: "Bad Request"
+        detail:
+          type: string
+          description: "エラーの詳細"
+          default: "リクエストが不正です。正しいリクエストでリトライしてください"
+        invalidParams:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvalidParam"
+      required:
+        - title
+        - detail
+        - invalidParams
+    InvalidParam:
+      description: "不正なリクエストについての詳細"
+      type: object
+      properties:
+        name:
+          type: string
+          description: "エラーが発生したフィールド名"
+        reason:
+          type: string
+          description: "エラーの理由"
+      required:
+        - name
+        - reason
+
+
+    TaskForm:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 256
+          minLength: 1
+          description: "作成されるタスクのタイトル"
+      required:
+        - title
+
 
 
