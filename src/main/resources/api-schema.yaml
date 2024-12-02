@@ -16,11 +16,19 @@ paths:
       responses:
         '200':
           description: OK
-  /tasks/1:
+  /tasks/{taskId]: #{}で書くことで任意の値を設定できる
     get:
       tags:
         - tasks
       operationId: showTask
+      parameters:
+        - name: taskId #pathに書いた{}の中の名前と一致させる
+          in: path
+          required: true
+          description: "詳細を取得するタスクのID"
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
