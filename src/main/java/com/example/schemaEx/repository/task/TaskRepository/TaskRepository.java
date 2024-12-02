@@ -8,6 +8,6 @@ import java.util.Optional;
 @Mapper
 public interface TaskRepository {
 
-    @Select("select id, title from tasks order by id limit 1")
-    Optional<TaskRecord> select();
+    @Select("select id, title from tasks where id = #{taskId}")
+    Optional<TaskRecord> select(long taskId);
 }
